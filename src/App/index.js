@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 import { AppUI } from "./AppUI";
 
 const defaultTodos = [
@@ -17,18 +18,8 @@ const defaultTodos = [
 ];
 
 function App() {
-  const localStorageTodos = localStorage.getItem("TODOS_V1");
+  const [todos, saveTodos] = useLocalStorage("TODOS_V1", []);
 
-  let parsedTodos;
-
-  if (!localStorageTodos) {
-    localStorage.setItem("TODOS_V1", JSON.stringify([]));
-    parsedTodos = [];
-  } else {
-    parsedTodos = JSON.parse(localStorageTodos);
-  }
-
-  const [todos, setTodos] = useState(defaultTodos);
   const [searchValue, setSearchValue] = useState("");
 
   const completedTodos = todos.filter(todo => !!todo.completed).length;
@@ -46,12 +37,6 @@ function App() {
       return todoText.includes(searchText);
     });
   }
-
-  const saveTodos = newTodos => {
-    const stringifiedTodos = JSON.stringify(newTodos);
-    localStorage.setItem("TODOS_V1", stringifiedTodos);
-    setTodos(newTodos);
-  };
 
   const completeTodo = text => {
     const todoIndex = todos.findIndex(todo => todo.text === text);
