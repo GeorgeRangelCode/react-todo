@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { AppUI } from "./AppUI";
 
@@ -18,7 +18,7 @@ const defaultTodos = [
 ];
 
 function App() {
-  const [todos, saveTodos] = useLocalStorage("TODOS_V1", []);
+  const { item: todos, saveItem: saveTodos, loading, error } = useLocalStorage("TODOS_V1", []);
 
   const [searchValue, setSearchValue] = useState("");
 
@@ -52,8 +52,18 @@ function App() {
     saveTodos(newTodos);
   };
 
+  /*   console.log("render antes");
+
+  useEffect(() => {
+    console.log("aqui useefect");
+  }, [totalTodos]);
+
+  console.log("render despues"); */
+
   return (
     <AppUI
+      loading={loading}
+      error={error}
       totalTodos={totalTodos}
       completedTodos={completedTodos}
       searchValue={searchValue}
